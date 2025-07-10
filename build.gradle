@@ -201,7 +201,7 @@ java {
 
 jar {
     inputs.property "archivesName", project.base.archivesName
-    from("LICENSE") { rename { "${it}_${inputs.properties.archivesName}" } }
+    from("LICENSE.md") { rename { "${it}_${inputs.properties.archivesName}" } }
 
     // Dynamischer JAR-Dateiname basierend auf MC- und Mod-Version
     archiveFileName = "${archives_base_name}-${minecraft_version}+${mod_version}.jar"

@@ -1,6 +1,6 @@
 <!-- modrinth_exclude.start -->
 ![BANNER.png](BANNER.png)
-[![License: Non-Commercial MIT](https://img.shields.io/badge/license-NC--MIT-blue.svg?style=for-the-badge)](LICENSE.txt)
+[![License: Non-Commercial MIT](https://img.shields.io/badge/license-NC--MIT-blue.svg?style=for-the-badge)](LICENSE.md)
 [![Modrinth Downloads](https://img.shields.io/modrinth/dt/midi?
 style=for-the-badge&logo=modrinth&labelColor=16181c&color=168b48)](https://modrinth.com/plugin/midi)
 <!-- modrinth_exclude.end -->
@@ -70,4 +70,5 @@ ServerPlayNetworking.registerGlobalReceiver(
 
 ---
 
-Got questions or suggestions? Feel free to open an [issue](https://github.com/your-username/your-repo/issues) or reach out directly!
+Got questions or suggestions? Feel free to open an [issue](https://github.com/uebliche/midi/issues) or reach out 
+directly!
