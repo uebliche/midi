@@ -6,8 +6,9 @@
 	"description": "${mod_description}",
 	"authors": ["Me!"],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://modrinth.com/project/midi",
+		"sources": "https://github.com/uebliche/midi",
+		"issues": "https://github.com/uebliche/midi/issues"
 	},
 	"license": "CC0-1.0",
 	"icon": "${icon_path}",
@@ -15,7 +16,6 @@
 	"entrypoints": {
 		"main": ["${main_class}"]
 	},
-	"mixins": ["${mod_id}.mixins.json"],
 	"depends": {
 		"fabricloader": ">=0.16.14",
 		"minecraft": "~${minecraft_version}",
