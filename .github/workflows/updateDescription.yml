@@ -9,11 +9,7 @@ on:
 
 jobs:
   update-description:
-
     runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-
     steps:
       - uses: actions/checkout@v3
       - name: Set up Java
