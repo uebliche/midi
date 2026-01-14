@@ -313,18 +313,20 @@ def generateChangelog = {
     return output ?: "No recent changes."
 }
 
-modrinth {
-    syncBodyFrom = rootProject.file("README.md").text
-    token = System.getenv("MODRINTH_TOKEN")
-    projectId = project.modrinth_projectId
-    versionNumber = project.mod_version
-    versionName = "${archives_base_name}-${minecraft_version}+${mod_version}"
-    versionType = project.mod_version_type
-    uploadFile = shadowJar
-    gameVersions = ["${project.minecraft_version}"]
-    loaders = ["fabric"]
-    dependencies {
-        required.project "fabric-api"
+if (project.hasProperty("modrinth_projectId")) {
+    modrinth {
+        syncBodyFrom = rootProject.file("README.md").text
+        token = System.getenv("MODRINTH_TOKEN")
+        projectId = project.modrinth_projectId
+        versionNumber = project.mod_version
+        versionName = "${archives_base_name}-${minecraft_version}+${mod_version}"
+        versionType = project.mod_version_type
+        uploadFile = shadowJar
+        gameVersions = ["${project.minecraft_version}"]
+        loaders = ["fabric"]
+        dependencies {
+            required.project "fabric-api"
+        }
+        changelog = "🔄 Changes:\n${generateChangelog()}"
     }
-    changelog = "🔄 Changes:\n${generateChangelog()}"
 }
