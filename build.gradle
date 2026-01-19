@@ -320,7 +320,7 @@ if (project.hasProperty("modrinth_projectId")) {
         projectId = project.modrinth_projectId
         versionNumber = project.mod_version
         versionName = "${archives_base_name}-${minecraft_version}+${mod_version}"
-        versionType = project.mod_version_type
+        versionType = "release"
         uploadFile = shadowJar
         gameVersions = ["${project.minecraft_version}"]
         loaders = ["fabric"]
