@@ -304,13 +304,3 @@ tasks.register('buildAllVersions') {
         println "\n✅ Alle Shadow-Builds gespeichert unter: ${outputDir.absolutePath}"
     }
 }
-
-def generateChangelog = {
-    def proc = ['git', 'log', '--pretty=format:- %s', '--no-merges', '-n', '10'].execute()
-    proc.waitFor()
-    def output = proc.in.text.trim()
-    return output ?: "No recent changes."
-}
-
-if (project.hasProperty("modrinth_projectId")) {
-}
