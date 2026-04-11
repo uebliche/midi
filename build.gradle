@@ -162,7 +162,7 @@ ext.fabric_version = resolved.api
 dependencies {
     annotationProcessor "systems.manifold:manifold-preprocessor:${rootProject.manifold_version}"
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings loom.officialMojangMappings()
+    (project.ext.has("mcmetaFabricSupport") ? project.ext.mcmetaFabricSupport : project.rootProject.ext.mcmetaFabricSupport).applyMappings(project, delegate)
     modImplementation "net.fabricmc:fabric-loader:${loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 

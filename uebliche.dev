@@ -138,5 +138,9 @@
         "1"
       ]
     }
-  ]
+  ],
+  "ueblicheNet": {
+    "type": "extension",
+    "id": "midi"
+  }
 }
