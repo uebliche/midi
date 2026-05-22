@@ -1,9 +1,64 @@
 import groovy.json.JsonSlurper
 
 pluginManagement {
+	resolutionStrategy {
+		eachPlugin {
+			if (requested.id.id == "net.uebliche.mcmeta") {
+				def requestedVersion = requested.version
+					?: gradle.startParameter.projectProperties.get("mcmetaPluginVersion")
+					?: System.getenv("MCMETA_PLUGIN_VERSION")
+					?: "0.1.0"
+				useModule("net.uebliche:mcmeta-gradle:${requestedVersion}")
+			}
+			if (requested.id.id in ["fabric-loom", "net.fabricmc.fabric-loom", "net.fabricmc.fabric-loom-remap"]) {
+				def requestedVersion = requested.version
+				if (!requestedVersion && gradle.ext.has("fabricLoomVersion")) {
+					requestedVersion = gradle.ext.fabricLoomVersion?.toString()
+				}
+				if (requestedVersion != null && requestedVersion.toString().trim()) {
+					useModule("net.fabricmc:fabric-loom:${requestedVersion}")
+				}
+			}
+		}
+	}
+    def resolveMcmetaPluginDir = {
+        def override = gradle.startParameter.projectProperties.get("mcmetaPluginPath")?.trim()
+        if (!override) {
+            override = System.getenv("MCMETA_PLUGIN_PATH")
+        }
+        if (override) {
+            def candidate = new File(override)
+            if (!candidate.isAbsolute()) {
+                candidate = new File(settingsDir, override)
+            }
+            return candidate
+        }
+        def candidates = [
+                new File(settingsDir, "../../tools/mcmeta-gradle/gradle-plugin"),
+                new File(settingsDir, "../../web/mcmeta/gradle-plugin"),
+                new File(settingsDir, "../../../mcmeta/gradle-plugin")
+        ]
+        return candidates.find { it.exists() }
+    }
     def resolveFabricLoomVersion = {
-        def mcmetaFile = new File(settingsDir, "../../web/mcmeta/loom-index.json").canonicalFile
-        if (!mcmetaFile.exists()) {
+        def override = gradle.startParameter.projectProperties.get("fabricLoomVersionOverride")?.trim()
+        if (!override) {
+            override = System.getenv("FABRIC_LOOM_VERSION")?.trim()
+        }
+        if (!override) {
+            override = providers.gradleProperty("loom_version").orNull?.trim()
+        }
+        if (!override) {
+            override = gradle.startParameter.projectProperties.get("loom_version")?.trim()
+        }
+        if (override) {
+            return override
+        }
+        def mcmetaFile = [
+                new File(settingsDir, "../../web/mcmeta/loom-index.json"),
+                new File(settingsDir, "../../../mcmeta/loom-index.json")
+        ].find { it.exists() }?.canonicalFile
+        if (mcmetaFile == null || !mcmetaFile.exists()) {
             throw new GradleException("mcmeta loom index missing: ${mcmetaFile}")
         }
         def data = new JsonSlurper().parse(mcmetaFile)
@@ -39,7 +94,17 @@ pluginManagement {
         throw new GradleException("mcmeta Fabric Loom version missing in ${mcmetaFile}")
     }
     def fabricLoomVersion = resolveFabricLoomVersion()
-    includeBuild("../../tools/mcmeta-gradle/gradle-plugin")
+    gradle.ext.fabricLoomVersion = fabricLoomVersion
+    def mcmetaPluginDir = resolveMcmetaPluginDir()
+    gradle.ext.mcmetaPluginAvailable = mcmetaPluginDir != null && mcmetaPluginDir.exists()
+    gradle.ext.mcmetaPluginDir = mcmetaPluginDir
+    if (mcmetaPluginDir != null && mcmetaPluginDir.exists()) {
+        includeBuild(mcmetaPluginDir) {
+            dependencySubstitution {
+                substitute(module("net.uebliche:mcmeta-gradle")).using(project(":"))
+            }
+        }
+    }
     plugins {
         id "fabric-loom" version fabricLoomVersion
     }
